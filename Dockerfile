@@ -1,0 +1,11 @@
+FROM node:16-alpine
+LABEL author="borzou@theboeffect.com"
+RUN mkdir /app
+
+COPY . /app
+WORKDIR /app
+RUN yarn test && yarn clean && yarn --production
+
+EXPOSE 3000
+
+CMD ["yarn", "start"]

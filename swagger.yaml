@@ -1,0 +1,313 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Boilerplate Service
+  description: A Boilerplate for services that run in docker or lambda
+  x-logo:
+    url: https://cdn-images-1.medium.com/max/280/1*vuHoiLlmWjuTJ9zK98jFtQ@2x.png
+tags:
+  - name: System
+    description: Basic System Functionality
+paths:
+  /logs:
+    post:
+      tags:
+        - System
+      summary: Write a new log to the console and the db
+      description: This is unlikely to be used with frequency.
+      operationId: writeLog
+      responses:
+        '201':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                properties:
+                  type:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Log'
+        '405':
+          description: Invalid input
+        '500':
+          description: Unknown error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/writeLog'
+        description: Log data to be written
+        required: true
+    get:
+      tags:
+        - System
+      summary: Retrieve all logs in the system
+      description: 'Uses oData filtering to retrieve logs. You will need to use oData syntax.'
+      operationId: getLogs
+      parameters:
+        - name: $filter
+          in: query
+          description: oData filter Query
+          required: false
+          schema:
+            type: string
+        - name: $select
+          in: query
+          description: oData select Query
+          required: false
+          schema:
+            type: string
+        - name: $orderby
+          in: query
+          description: oData orderby Query
+          required: false
+          schema:
+            type: string
+        - name: $skip
+          in: query
+          description: oData skip Query
+          required: false
+          schema:
+            type: string
+        - name: $top
+          in: query
+          description: oData top Query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                properties:
+                  type:
+                    type: string
+                    default: Log
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Log'
+  '/logs/{id}':
+    get:
+      tags:
+        - System
+      summary: Find a log with its ID
+      description: 'Codes should be "error", "notify", or "success".'
+      operationId: getLog
+      parameters:
+        - name: id
+          in: path
+          description: id of log type to return
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                properties:
+                  type:
+                    type: string
+                    default: log
+                  data:
+                    $ref: '#/components/schemas/Log'
+        '400':
+          description: Invalid code supplied
+        '404':
+          description: Log not found
+    patch:
+      tags:
+        - System
+      summary: Patch an existing Log
+      description: Patch an existing Log - This is not a normal action for logs, used here as an example of JSON Patch only.
+      operationId: patchLog
+      parameters:
+        - name: id
+          in: path
+          description: id of log type to update
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                properties:
+                  type:
+                    type: string
+                    default: Log
+                  data:
+                    $ref: '#/components/schemas/Log'
+        '405':
+          description: Invalid input
+        '500':
+          description: Unknown error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/jsonPatch'
+        description: JSON Patch specific to your log object
+        required: true
+  /health:
+    get:
+      tags:
+        - System
+      summary: Health check
+      description: Health check
+      responses:
+        '200':
+          description: GET successful
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+#Global Security
+security:
+  - bearer: []
+
+servers:
+  - url: http://localhost:3000/api
+
+components:
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      description: 'Bearer based tokens, simply enter the token (prefixing with "bearer" is not required).'
+    basicAuth:
+      type: http
+      scheme: basic
+    openId:
+      type: openIdConnect
+      openIdConnectUrl: https://example.com/.well-known/openid-configuration
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://example.com/oauth/authorize
+          tokenUrl: https://example.com/oauth/token
+          scopes:
+            read: Grants read access
+            write: Grants write access
+            admin: Grants access to admin operations
+  schemas:
+    error:
+      required:
+        - id
+        - error
+        - message
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: unique ID for the error
+        error:
+          type: string
+          description: type of error
+        message:
+          type: string
+          description: additional information about the error
+
+    jsonPatch:
+      additionalProperties: false
+      description: Details for JSONPatch can be found at http://jsonpatch.com/
+      type: array
+      items:
+        type: object
+        description: Reference the update model for the full paths to update
+        oneOf:
+          - required:
+              - op
+              - path
+              - value
+            properties:
+              op:
+                type: string
+                enum: ['replace', 'add', 'remove', 'test']
+              path:
+                type: string
+                description: 'A path to the property in the data model. For example /name/firstName or /emails/-'
+              value:
+                type: object
+                description: 'The object, array or object to set the property at the above path to'
+          - required:
+              - op
+              - path
+              - value
+            properties:
+              op:
+                type: string
+                enum: ['replace', 'add', 'remove', 'test']
+              path:
+                type: string
+                description: 'A path to the property in the data model. For example /name/firstName or /emails/-'
+              value:
+                type: string
+                description: 'The string, array or object to set the property at the above path to'
+          - required:
+              - op
+              - path
+              - value
+            properties:
+              op:
+                type: string
+                enum: ['replace', 'add', 'remove', 'test']
+              path:
+                type: string
+                description: 'A path to the property in the data model. For example /name/firstName or /emails/-'
+              value:
+                type: boolean
+          - required:
+              - op
+              - path
+              - value
+            properties:
+              op:
+                type: string
+                enum: ['replace', 'add', 'remove', 'test']
+              path:
+                type: string
+                description: 'A path to the property in the data model. For example /name/firstName or /emails/-'
+              value:
+                type: integer
+                description: 'The integer, array or object to set the property at the above path to'
+          - required:
+              - op
+              - path
+            properties:
+              op:
+                type: string
+                enum: ['remove']
+              path:
+                type: string
+                description: 'A path to the property in the data model. For example /name/firstName or /emails/-'
+          - required:
+              - op
+              - from
+              - path
+            properties:
+              op:
+                type: string
+                enum: ['copy', 'move']
+              from:
+                type: string
+                description: 'Path to copy or move from'
+              path:
+                type: string
+                description: 'Path to copy or move to'

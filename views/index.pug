@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  section#head.section
+    .row
+      .col-lg-12
+        .index-container
+          h2
+            a.a-decoration.color-grey(href=url)=by
+          h6="Copyright © " + year + " All Rights Reserved"
+          h3=title
+            span.version=" v" + version
+          p.m-t-20=description
+          div
+            a.btn.btn-outline-dark.m-r-10(href='/swagger') Swagger&nbsp;
+            a.btn.btn-outline-dark.m-r-10(href=home) Project&nbsp;
+            a.btn.btn-outline-dark.m-r-10(href='/api') Documentation&nbsp;
