@@ -1,9 +1,12 @@
 # Boilerplate Service
 
-## TODO
+## TODO Boilerplate Fixes
 
+cleanup swagger definition of log
+Generalize example log directory files and calls
 Fix config references in core/auth and remove config.swagger
 Convert boiler to ESM
+convert tests
 
 A boilerplate typescript micro service that runs as docker or lambda. Click "Use this Template" to use this for your service.
 

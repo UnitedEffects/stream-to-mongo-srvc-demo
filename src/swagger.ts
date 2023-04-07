@@ -3,6 +3,8 @@ import merge from 'json-schema-resolve-allof';
 import yaml from 'yamljs';
 import fs from 'fs';
 import logSchema from './api/logging/data/schema.js';
+import dataSchema from './api/datalake/data/schema.js';
+
 const swag = yaml.parse(fs.readFileSync('./swagger.yaml', 'utf8'));
 const instances = new Map();
 
@@ -25,6 +27,7 @@ async function aggregate(swag: any) {
     const api = swag;
     const agg = [
         logSchema.schema,
+        dataSchema.schema,
         //next one here...
     ];
     agg.forEach((s: any) => {

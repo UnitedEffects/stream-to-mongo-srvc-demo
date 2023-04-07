@@ -7,6 +7,9 @@ import qs from 'querystring';
 import cache from './cache/cacheMap.js';
 import {nanoid} from 'nanoid';
 import { config } from './config.js';
+import dataLake from './api/datalake/logic.js';
+import IDL from './api/datalake/data/type';
+
 const sc = StringCodec();
 
 const CACHE_NAME = 'NATS';
@@ -19,8 +22,8 @@ export class UESListener {
     seed: string
     upk: string
     subject: string
-    queue: string|null
-    stream: string|null
+    queue: string|undefined
+    stream: string|undefined
     inbox: string
     consumer: string
     natsCId: string
@@ -165,24 +168,19 @@ function creds(seed: string, jwt: string) {
 async function saveStreamData(subject: string, data: any) {
     const sub = subject.split('.');
     console.info('Subject', sub);
-    if(data){
+    if(data.type){
         console.info('SAVING DATA', data);
-        //todo new write...
-        /*
-        const e = {
-            authGroup: data.group,
-            eventSource: sub[3],
-            eventId: data.id,
-            event: data.event,
-            eventTime: data.eventTime,
-            eventMessage: data.message,
-            eventData: data.data,
-        };
-        return audit.save(e);
-
-         */
+        const d: IDL.DataObject = {
+            created: data.created,
+            type: data.type,
+            stream: config.UES_STREAM,
+            subject,
+            data: data.data
+        }
+        console.info(d);
+        return dataLake.write(d);
     }
-    throw 'DATA MISSING REQUIRED FIELDS';
+    throw 'UNKNOWN TYPE';
 }
 
 async function getSecretJwt(id: string, secret: string, aud: string, minutes: number = 1) {
