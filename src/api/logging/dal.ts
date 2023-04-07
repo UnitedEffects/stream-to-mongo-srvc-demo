@@ -1,4 +1,4 @@
-import Log from './data/model';
+import Log from './data/model.js';
 import { IMongoQuery } from "../../types";
 import {LogObject} from "./data/type";
 

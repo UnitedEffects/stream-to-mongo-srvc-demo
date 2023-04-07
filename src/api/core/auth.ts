@@ -9,10 +9,10 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { Core, DoneFunction } from '../../types';
 import { Request } from 'express';
 import Boom from '@hapi/boom';
-import cache from './coreCache';
+import cache from './coreCache.js';
+import { config } from '../../config.js';
 
-const config = require('../../config');
-const AUDIENCE = `${config.PROTOCOL}://${config.SWAGGER}`;
+const AUDIENCE = `${config.PROTOCOL}://${config.HOST}`;
 
 const jwtCheck = /^([A-Za-z0-9\-_~+\/]+[=]{0,2})\.([A-Za-z0-9\-_~+\/]+[=]{0,2})(?:\.([A-Za-z0-9\-_~+\/]+[=]{0,2}))?$/;
 
@@ -42,7 +42,7 @@ async function getAGInfo(authGroup: string, token?: string) {
 	const info = await cache.getGroupInfo(authGroup);
 	if(info) return info;
 	const options: AxiosRequestConfig = {
-		url: `${config.CORE_EOS_ISSUER}/api/group-info/${authGroup}`,
+		url: `${config.UEA_API}/api/group-info/${authGroup}`,
 		method: 'get'
 	};
 	if(token) {
@@ -84,7 +84,7 @@ async function introspect(token: string, issuer: string, client_id: string) {
 async function runDecodedChecks(token: string, issuer: string, decoded: Core.Decoded, authGroup: string, clientId: string, requireAud: boolean = false): Promise<Core.CheckDecoded | Core.Decoded> {
 	// first validate correct UE Core ISS domain
 	const issHost = issuer.replace('http://', '').replace('https://','').split('/');
-	if(issHost[0] !== config.CORE_EOS_ISSUER.replace('https://','')) {
+	if(issHost[0] !== config.UEA_API.replace('https://','')) {
 		throw new Error('Unexpected host domain for Core EOS');
 	}
 	if(decoded.nonce) {
@@ -216,7 +216,7 @@ function oidcValidate (CC = false, platformOverride = false): any {
 			if (authGroup !== agData.groupId) {
 				authGroup = agData.groupId;
 			}
-			issuer = `${config.CORE_EOS_ISSUER}/${authGroup}`;
+			issuer = `${config.UEA_API}/${authGroup}`;
 			const inspect = await introspect(token, issuer, clientId);
 			if (inspect) {
 				if (inspect.active === false) {

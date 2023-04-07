@@ -1,5 +1,10 @@
 # Boilerplate Service
 
+## TODO
+
+Fix config references in core/auth and remove config.swagger
+Convert boiler to ESM
+
 A boilerplate typescript micro service that runs as docker or lambda. Click "Use this Template" to use this for your service.
 
 [![CI](https://github.com/theBoEffect/boilerplate/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/theBoEffect/boilerplate/actions/workflows/main.yml)

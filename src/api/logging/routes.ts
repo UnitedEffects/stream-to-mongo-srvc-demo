@@ -1,6 +1,6 @@
 import express from 'express';
-import log from './api';
-import m from '../../middleware';
+import log from './api.js';
+import m from '../../middleware.js';
 const router = express.Router();
 
 // simple non-auth endpoints

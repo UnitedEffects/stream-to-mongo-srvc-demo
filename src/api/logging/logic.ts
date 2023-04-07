@@ -1,6 +1,6 @@
 import jsonPatch from 'jsonpatch';
-import dal from './dal';
-import helper from '../../helper';
+import dal from './dal.js';
+import helper from '../../helper.js';
 import { IODataParams } from "../../types";
 import { LogObject } from "./data/type";
 

@@ -1,11 +1,14 @@
 import express, { Express } from 'express';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import logger from 'morgan';
 import cookieParser from 'cookie-parser';
-import middle from './middleware';
-import { Root, Logs } from './routes';
-import { config } from './config';
+import middle from './middleware.js';
+import { Root, Logs } from './routes/index.js';
+import { config } from './config.js';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const app: Express = express();
 
 app.set('views', path.join(__dirname, '../views'));

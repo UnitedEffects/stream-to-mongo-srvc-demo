@@ -1,11 +1,12 @@
 import axios from 'axios';
 import qs from 'querystring';
-import cache from './coreCache';
+import cache from './coreCache.js';
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from "express";
 import { v4 as uuid } from 'uuid';
 import Boom from "@hapi/boom";
-const config = require('../../config');
+import { config } from '../../config.js';
+
 const CLIENT_ASSERTION_TYPE = 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer';
 
 // creates a client secret jwt for secure m2m client authorization
@@ -49,7 +50,7 @@ const capi = {
 				if(!req.params.group) {
 					group = config.CORE_EOS_PLATFORM_ID;
 				} else group = req.params.group;
-				const url = `${config.CORE_EOS_ISSUER}/api/group-info/${group}`;
+				const url = `${config.UEA_API}/api/group-info/${group}`;
 				let result;
 				try {
 					result = await axios.get(url);
@@ -71,7 +72,7 @@ const capi = {
 			const authGroup = config.CORE_THIS_SERVICE_CC_AUTHORITY;
 			let token = (refresh === false) ? await cache.getToken((audience) ? audience : authGroup) : undefined;
 			if(!token) {
-				const url = `${config.CORE_EOS_ISSUER}/${authGroup}/token`;
+				const url = `${config.UEA_API}/${authGroup}/token`;
 				const jwt = await getSecretJwt(url);
 				const options = {
 					method: 'post',
@@ -83,7 +84,7 @@ const capi = {
 						grant_type: 'client_credentials',
 						client_assertion_type: CLIENT_ASSERTION_TYPE,
 						client_assertion: jwt,
-						audience: `${config.CORE_EOS_ISSUER}/${authGroup}`,
+						audience: `${config.UEA_API}/${authGroup}`,
 						scope: 'access'
 					})
 				};

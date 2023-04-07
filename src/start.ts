@@ -1,8 +1,10 @@
-import app from './app';
-import connection from './connection';
-import openApi from './swagger';
-import { config } from './config';
+import app from './app.js';
+import connection from './connection.js';
+import openApi from './swagger.js';
+import { config } from './config.js';
+import { UESListener } from "./listener.js";
 
+const ues = new UESListener();
 let mongoConnect = config.MONGO;
 
 if (!mongoConnect) {
@@ -47,6 +49,13 @@ const server = app.listen(port, async () => {
     console.error(`Listening on ${port}`);
     await connection.create(mongoConnect);
     await openApi.init();
+    try {
+        await ues.connect();
+        await ues.listen();
+    } catch (error) {
+        console.error('could not initiate connection to UE Streams', error);
+        process.exit(1);
+    }
 });
 
 server.on('error', onError);
