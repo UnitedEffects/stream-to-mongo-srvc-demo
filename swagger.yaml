@@ -8,7 +8,61 @@ info:
 tags:
   - name: System
     description: Basic System Functionality
+  - name: Data
+    description: Data being gathered and persisted from UE Streams
 paths:
+  /data:
+    get:
+      tags:
+        - Data
+      summary: Retrieve all data
+      description: 'Uses oData filtering to retrieve data. You will need to use oData syntax.'
+      operationId: getData
+      parameters:
+        - name: $filter
+          in: query
+          description: oData filter Query
+          required: false
+          schema:
+            type: string
+        - name: $select
+          in: query
+          description: oData select Query
+          required: false
+          schema:
+            type: string
+        - name: $orderby
+          in: query
+          description: oData orderby Query
+          required: false
+          schema:
+            type: string
+        - name: $skip
+          in: query
+          description: oData skip Query
+          required: false
+          schema:
+            type: string
+        - name: $top
+          in: query
+          description: oData top Query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                properties:
+                  type:
+                    type: string
+                    default: Log
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/data'
   /logs:
     post:
       tags:

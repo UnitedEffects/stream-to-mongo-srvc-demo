@@ -14,6 +14,6 @@ export default {
         return Data.findOne( { _id: id });
     },
     async patch(id: string, data: DataObject): Promise<any> {
-        return Data.findOneAndUpdate({ _id: id }, data, { new: true, overwrite: true })
+        return Data.findOneAndReplace({ _id: id }, data, { new: true, overwrite: true })
     }
 };

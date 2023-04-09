@@ -2,9 +2,10 @@ import { IResponseOutput } from '../types'
 
 export default {
     ok(data: any = 'OK', type='RESPONSE'): IResponseOutput {
-        return {
+        return  {
             statusCode: 200,
             type,
+            count: (Array.isArray(data)) ? data.length : undefined,
             data
         }
     },

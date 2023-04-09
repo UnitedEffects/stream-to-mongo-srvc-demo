@@ -3,9 +3,9 @@ import api from './api.js';
 //import m from '../../middleware.js';
 const router = express.Router();
 
-router.get('/dl', api.get);
-router.get('/dl/:id',  api.getOne);
-router.post('/dl', api.write);
-router.patch('/dl/:id', api.patch);
+router.get('/data', api.get);
+router.get('/data/:id',  api.getOne);
+router.post('/data', api.write);
+router.patch('/data/:id', api.patch);
 
 export default router;

@@ -48,14 +48,9 @@ app.set('port', port);
 const server = app.listen(port, async () => {
     console.error(`Listening on ${port}`);
     await connection.create(mongoConnect);
-    await openApi.init();
-    try {
-        await ues.connect();
-        await ues.listen();
-    } catch (error) {
-        console.error('could not initiate connection to UE Streams', error);
-        process.exit(1);
-    }
+    await openApi.init(port);
+    let count = 0;
+    await ues.setupListener(count);
 });
 
 server.on('error', onError);

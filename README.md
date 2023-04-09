@@ -7,6 +7,7 @@ Generalize example log directory files and calls
 Fix config references in core/auth and remove config.swagger
 Convert boiler to ESM
 convert tests
+change overwrite to findoneandreplace
 
 A boilerplate typescript micro service that runs as docker or lambda. Click "Use this Template" to use this for your service.
 

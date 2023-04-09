@@ -69,6 +69,7 @@ export class UESListener {
             (async () => {
                 for await (const s of this.nc.status()) {
                     switch (s.data) {
+                        case 'IDLE_HEARTBEAT':
                         case 'AUTHORIZATION_VIOLATION':
                         case 'AUTHENTICATION_EXPIRED':
                             await this.connect();
@@ -93,7 +94,7 @@ export class UESListener {
             opts.manualAck();
             opts.ackExplicit();
             opts.deliverTo(createInbox(this.inbox));
-            opts.idleHeartbeat(500);
+            if(!this.queue) opts.idleHeartbeat(500);
             let sub = await this.js.subscribe(`${this.subject}`, opts);
             await (async () => {
                 for await (const m of sub) {
@@ -150,6 +151,22 @@ export class UESListener {
             throw error;
         }
     }
+    async setupListener(count: number) {
+        if(count < 10) {
+            try {
+                await this.connect();
+                await this.listen();
+                count = 0;
+            } catch (error) {
+                console.info(`Trying again ${count}...`, error);
+                count = count + 1
+                await this.setupListener(count)
+            }
+        } else{
+            console.error('could not initiate connection to UE Streams after 10 tries');
+            process.exit(1);
+        }
+    }
 }
 
 function creds(seed: string, jwt: string) {
@@ -170,8 +187,9 @@ async function saveStreamData(subject: string, data: any) {
     console.info('Subject', sub);
     if(data.type){
         console.info('SAVING DATA', data);
+        console.info('date', data.created, (new Date(data.created)));
         const d: IDL.DataObject = {
-            created: data.created,
+            created: (new Date(data.created)),
             type: data.type,
             stream: config.UES_STREAM,
             subject,

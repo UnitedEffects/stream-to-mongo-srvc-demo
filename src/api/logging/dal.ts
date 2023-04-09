@@ -15,6 +15,6 @@ export default {
         return Log.findOne( { _id: id });
     },
     async patchLog(id: string, data: LogObject): Promise<any> {
-        return Log.findOneAndUpdate({ _id: id }, data, { new: true, overwrite: true })
+        return Log.findOneAndReplace({ _id: id }, data, { new: true, overwrite: true });
     }
 };

@@ -43,7 +43,7 @@ export default {
         return aggregate(doc);
     },
     // rebuilds every time
-    async init(): Promise<any> {
+    async init(port: number): Promise<any> {
         let oa;
         if(instances.size) {
              oa = instances.get('instance');

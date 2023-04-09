@@ -3,7 +3,7 @@ import { Request, Response, NextFunction} from "express";
 import { say } from '../../say/index.js'
 import data from './logic.js';
 
-const RESOURCE = 'LOG';
+const RESOURCE = 'DATA';
 
 const api = {
     async write(req: Request, res: Response, next: NextFunction): Promise<any> {

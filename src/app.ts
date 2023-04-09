@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url';
 import logger from 'morgan';
 import cookieParser from 'cookie-parser';
 import middle from './middleware.js';
-import { Root, Logs } from './routes/index.js';
+import { Root, Logs, Data } from './routes/index.js';
 import { config } from './config.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -27,6 +27,7 @@ app.use(middle.cores);
 app.use(express.static(path.join(__dirname, '../public')));
 app.use('/', Root);
 app.use('/api', Logs);
+app.use('/api', Data);
 
 // catch 404 and other errors
 app.use(middle.catch404);
