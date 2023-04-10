@@ -2,7 +2,6 @@ import ref from '@apidevtools/json-schema-ref-parser';
 import merge from 'json-schema-resolve-allof';
 import yaml from 'yamljs';
 import fs from 'fs';
-import logSchema from './api/logging/data/schema.js';
 import dataSchema from './api/datalake/data/schema.js';
 
 const swag = yaml.parse(fs.readFileSync('./swagger.yaml', 'utf8'));
@@ -26,7 +25,6 @@ class OpenAPI {
 async function aggregate(swag: any) {
     const api = swag;
     const agg = [
-        logSchema.schema,
         dataSchema.schema,
         //next one here...
     ];
