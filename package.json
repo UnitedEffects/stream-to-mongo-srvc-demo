@@ -8,9 +8,8 @@
   "scripts": {
     "start": "node ./dist/start.js",
     "dev": "NODE_ENV=dev nodemon ./src/start.ts",
-    "swag-type": "ts-node openApiTypeGenerator.ts",
     "build": "yarn && tsc",
-    "test": "yarn build && jest",
+    "test": "yarn build && node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "clean": "rm -rf ./node_modules"
   },
   "keywords": [

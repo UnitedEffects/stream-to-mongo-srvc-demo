@@ -1,6 +1,5 @@
 import express from 'express';
 import api from './api.js';
-//import m from '../../middleware.js';
 const router = express.Router();
 
 router.get('/data', api.get);

@@ -1,4 +1,4 @@
-import {Schema, model, Document, Expression} from 'mongoose';
+import { Schema, model, Document } from 'mongoose';
 import { v4 as uuid } from 'uuid';
 import { DataObject } from './type';
 

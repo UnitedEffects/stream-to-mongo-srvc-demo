@@ -17,7 +17,6 @@ const require = createRequire(import.meta.url);
 const p = require('../package.json');
 
 const date = new Date();
-//const schema = new OpenApiValidator(swag, { ajvOptions: { formats: { email: true, password: true, uri: true, url: true, uuid: true } } });
 
 export default {
     cores (req: Request, res: Response, next: NextFunction): any {

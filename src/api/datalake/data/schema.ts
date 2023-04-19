@@ -1,7 +1,6 @@
 export default {
     schema: {
         "writeData": {
-            "title": "writeDataObject",
             "type": "object",
             "properties": {
                 "created": {
@@ -22,7 +21,6 @@ export default {
             }
         },
         "data": {
-            "title": "dataObject",
             "type": "object",
             "allOf": [
                 {
